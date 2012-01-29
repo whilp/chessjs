@@ -111,7 +111,7 @@
   function parse(board, move, n) {
     var move = move.split(""),
         drank = move.pop(),
-        check;
+        check = false;
 
     if (drank == "+") {
       check = true;
@@ -120,7 +120,14 @@
 
     var dfile = move.pop(),
         piece = move.pop(),
-        dst = dfile + drank,
+        capture = false;
+
+    if (piece == "x") {
+      capture = true;
+      piece = move.pop();
+    };
+
+    var dst = dfile + drank,
         src, x, y,
         candidates = [],
         matches = [];
@@ -213,6 +220,7 @@
       src: matches[0].pos,
       dst: dst,
       piece: piece,
+      capture: capture ? board[dst] : false,
     }
   };
 
