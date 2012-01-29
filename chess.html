@@ -221,7 +221,10 @@
     } else if (piece == "b" || piece == "B") {
       candidates = movediagonals(board, x, y, piece);
     } else if (piece == "q" || piece == "Q") {
-      candidates = movediagonals(board, x, y, piece);
+
+      candidates = candidates.concat(
+        movediagonals(board, x, y, piece),
+        moveranknfiles(board, x, y, piece));
     };
 
     for (var i = 0; i < candidates.length; i++) {
