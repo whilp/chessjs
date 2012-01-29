@@ -111,7 +111,14 @@
   function parse(board, move, n) {
     var move = move.split(""),
         drank = move.pop(),
-        dfile = move.pop(),
+        check;
+
+    if (drank == "+") {
+      check = true;
+      drank = move.pop();
+    };
+
+    var dfile = move.pop(),
         piece = move.pop(),
         dst = dfile + drank,
         src, x, y,
