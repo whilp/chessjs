@@ -1,0 +1,7 @@
+submit game moves -> service
+service returns hash
+
+receive hash
+load moves from service
+
+use hashes as shorturls to make playing games via email easier
