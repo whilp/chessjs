@@ -108,34 +108,46 @@
     return table;
   };
 
+  function parse(board, move, n) {
+    var move = move.split(""),
+        file = move.pop(),
+        rank = move.pop(),
+        dst = rank + file,
+        src = "whoknows",
+        piece = move.pop();
+
+    if (piece == undefined) {
+      piece = "p";
+    }
+
+    if (n % 2) {
+      piece = piece.toUpperCase();
+    } else {
+      piece = piece.toLowerCase();
+    };
+
+    return {
+      src: src,
+      dst: dst,
+      piece: piece,
+    }
+  };
+
   /* Play a game. */
   function play (board, moves) {
     for (var i = 0; i < moves.length; i++) {
-      /* XXX: normalize move. */
-      var move = moves[i].split(""),
-          file = move.pop(),
-          rank = move.pop(),
-          piece = move.pop(),
-          dst = rank + file;
+      var move = parse(board, moves[i], i);
 
       /* XXX: Handle check. */
-      if (piece == undefined) {
-        piece = "p";
-      }
 
       /* Choose piece for the player's color. */
-      if (i % 2) {
-        piece = piece.toUpperCase();
-      } else {
-        piece = piece.toLowerCase();
-      };
 
       /* XXX: Find srcsquare. */
 
-      var dstsquare = document.getElementById("position-" + dst),
+      var dstsquare = document.getElementById("position-" + move.dst),
           contents = dstsquare.firstChild;
       dstsquare.replaceChild(
-        document.createTextNode(pieces[piece]),
+        document.createTextNode(pieces[move.piece]),
         contents);
     };
   };
