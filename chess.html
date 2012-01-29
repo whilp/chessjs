@@ -155,16 +155,47 @@
   };
 
   function parse(board, move, n) {
-    var move = move.split(""),
+    var moves = [],
+        orig = move,
+        move = move.split(""),
         drank = move.pop(),
-        check = false;
+        check = false,
+        castle = false;
 
     if (drank == "+") {
       check = true;
       drank = move.pop();
     };
+
     if (drank == "0" || drank == "O") {
-      /* XXX: Castle! */
+      var crank = (n % 2) ? "8" : "1";
+
+      if (orig.split("-").length == 2) {
+        /* Kingside. */
+        var before = {K: "e", R: "h"},
+            after =  {K: "g", R: "f"};
+      } else {
+        /* Queenside. */
+        var before = {K: "d", R: "a"},
+            after =  {K: "b", R: "c"};
+      };
+      castle = {
+        before: before,
+        after: after,
+      }
+
+      return [
+        {
+          src: before.K + crank,
+          dst: after.K + crank,
+          piece: (n % 2) ? "K" : "k",
+        },
+        {
+          src: before.R + crank,
+          dst: after.R + crank,
+          piece: (n % 2) ? "R" : "r",
+        },
+      ];
     };
 
     var dfile = move.pop(),
@@ -248,13 +279,15 @@
       /* XXX: Too many candidates. */
     }
 
-    return [{
+    moves.push({
       src: matches[0].pos,
       dst: dst,
       piece: piece,
       check: check,
       capture: capture ? board[dst] : false,
-    }];
+    });
+
+    return moves;
   };
 
   function update(board, move) {
