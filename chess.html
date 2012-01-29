@@ -43,14 +43,13 @@
   var delimiter = ",",
       files = "abcdefgh",
       ranks = "12345678",
+      players = ["white", "black"],
       board = {},
       pieces = {
         "k": "♔", "q": "♕", "r": "♖", "b": "♗", "n": "♘", "p": "♙",
         "K": "♚", "Q": "♛", "R": "♜", "B": "♝", "N": "♞", "P": "♟",
-      },
-      moves = window.location.search.substring(1)
-        .split("=")[1]
-        .split(delimiter);
+        undefined: " ",
+      };
 
   /* Add a name to elem.className if it's not already present. */
   function addclass(elem, cls) {
@@ -74,7 +73,7 @@
 
     for (var rank in initialstate) {
       for (var i = 0; i < initialstate[rank].length; i++) {
-        board[files[i] + rank] = pieces[initialstate[rank][i]];
+        board[files[i] + rank] = initialstate[rank][i];
       };
     };
   };
@@ -91,15 +90,14 @@
       for (var file = 0; file < files.length; file++) {
         var f = files[file],
             cell = document.createElement("td"),
-            state = board[f + r];
+            piece = board[f + r];
 
         addclass(cell, "square");
         cell.id = "position-" + f + r;
-        if (state == undefined) {
-          state = " ";
+        if (piece == undefined) {
           addclass(cell, "empty");
         };
-        contents = document.createTextNode(state);
+        contents = document.createTextNode(pieces[piece]);
         cell.appendChild(contents);
 
         row.appendChild(cell);
@@ -110,17 +108,37 @@
     return table;
   };
 
+  /* Play a game. */
+  function play (board, moves) {
+    for (var i = 0; i < moves.length; i++) {
+      var move = moves[i].split(""),
+          file = move.pop(),
+          rank = move.pop(),
+          piece = move.pop(),
+          square = document.getElementById("position-" + rank + file),
+          contents = square.firstChild;
+
+      /* XXX: Handle check. */
+      if (piece == undefined) {
+        piece = "p";
+      }
+
+      square.replaceChild(
+        document.createTextNode(pieces[piece]),
+        contents);
+    };
+  };
+
   init(board);
 
   var boardelem = document.getElementById("board"),
       table = render(board);
   boardelem.appendChild(table);
 
-  for (var i = 0; i < moves.length; i++) {
-    var move = moves[i],
-      position = document.getElementById("position-" + move);
-    addclass(position, "highlight");
-  };
+  var moves = window.location.search.substring(1)
+    .split("=")[1]
+    .split(delimiter);
+  play(board, moves);
 })();
 </script>
 </body>
