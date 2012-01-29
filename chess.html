@@ -108,6 +108,35 @@
     return table;
   };
 
+  function movediagonals(board, x, y, piece) {
+    var candidates = [],
+        directions = [
+          {x: 1, y: 1},
+          {x: 1, y: -1},
+          {x: -1, y: 1},
+          {x: -1, y: -1},
+        ];
+
+    for (var distance = 1; distance < files.length; distance++) {
+      for (var i = 0; i < directions.length; i++) {
+        var candidate = {
+              x: x + (distance * directions[i].x),
+              y: y + (distance * directions[i].y),
+            },
+            position = files[candidate.x] + ranks[candidate.y],
+            state = board[position];
+
+        if (state == piece) {
+          candidates.push(candidate);
+        } else if (state != undefined) {
+          directions.splice(i, 1);
+        };
+      };
+    };
+
+    return candidates;
+  };
+
   function parse(board, move, n) {
     var move = move.split(""),
         drank = move.pop(),
@@ -172,29 +201,7 @@
         {x: x - 1, y: y + 2},
       ];
     } else if (piece == "b" || piece == "B") {
-      var directions = [
-            {x: 1, y: 1},
-            {x: 1, y: -1},
-            {x: -1, y: 1},
-            {x: -1, y: -1},
-          ];
-
-      for (var distance = 1; distance < files.length; distance++) {
-        for (var i = 0; i < directions.length; i++) {
-          var candidate = {
-                x: x + (distance * directions[i].x),
-                y: y + (distance * directions[i].y),
-              },
-              position = files[candidate.x] + ranks[candidate.y],
-              state = board[position];
-
-          if (state == piece) {
-            candidates.push(candidate);
-          } else if (state != undefined) {
-            directions.splice(i, 1);
-          };
-        };
-      };
+      candidates = movediagonals(board, x, y, piece);
     };
 
     for (var i = 0; i < candidates.length; i++) {
