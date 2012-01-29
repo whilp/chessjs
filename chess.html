@@ -155,7 +155,6 @@
   };
 
   function parse(board, move, n) {
-    console.log("parse", move);
     var move = move.split(""),
         drank = move.pop(),
         check = false;
@@ -163,6 +162,9 @@
     if (drank == "+") {
       check = true;
       drank = move.pop();
+    };
+    if (drank == "0" || drank == "O") {
+      /* XXX: Castle! */
     };
 
     var dfile = move.pop(),
