@@ -61,10 +61,10 @@
   /* Initialize board state. */
   function init(board) {
     var initialstate = {
-          "1": "RNBQKBNR",
-          "2": "PPPPPPPP",
-          "7": "pppppppp",
-          "8": "rnbqkbnr",
+          "8": "RNBQKBNR",
+          "7": "PPPPPPPP",
+          "2": "pppppppp",
+          "1": "rnbqkbnr",
         };
 
     for (var rank in initialstate) {
@@ -79,7 +79,7 @@
     var table = document.createElement("table");
     addclass(table, "board");
 
-    for (var rank = 0; rank < ranks.length; rank++) {
+    for (var rank = ranks.length - 1; rank >= 0; rank--) {
       var row = document.createElement("tr"),
           r = ranks[rank];
 
