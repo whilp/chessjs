@@ -1,0 +1,74 @@
+<html>
+<head>
+  <title>jschess</title>
+</head>
+<body>
+
+<div id="board">
+</div>
+
+<script type="text/javascript" charset="utf-8">
+(function () {
+  var delimiter = ",",
+      files = "abcdefgh",
+      ranks = "12345678",
+      board = {},
+      pieces = {
+        "k": "♔", "q": "♕", "r": "♖", "b": "♗", "n": "♘", "p": "♙",
+        "K": "♚", "Q": "♛", "R": "♜", "B": "♝", "N": "♞", "P": "♟",
+      },
+      moves = window.location.search.substring(1)
+        .split("=")[1]
+        .split(delimiter);
+
+  /* Initialize board state. */
+  function init(board) {
+    var initialstate = {
+          "1": "RNBQKBNR",
+          "2": "PPPPPPPP",
+          "7": "pppppppp",
+          "8": "rnbqkbnr",
+        };
+
+    for (var rank in initialstate) {
+      for (var i = 0; i < initialstate[rank].length; i++) {
+        board[files[i] + rank] = pieces[initialstate[rank][i]];
+      };
+    };
+  };
+
+  /* Render a board. */
+  function render(board) {
+    var table = document.createElement("table");
+
+    for (var rank = 0; rank < ranks.length; rank++) {
+      var row = document.createElement("tr"),
+          r = ranks[rank];
+      for (var file = 0; file < files.length; file++) {
+        var f = files[file],
+            cell = document.createElement("td"),
+            state = board[f + r];
+
+        if (state) {
+          contents = document.createTextNode(state);
+          cell.appendChild(contents);
+        }
+
+        row.appendChild(cell);
+        console.log(f+r, board[f + r])
+      };
+      table.appendChild(row);
+    };
+
+    return table;
+  };
+
+  init(board);
+
+  var boardelem = document.getElementById("board"),
+      table = render(board);
+  boardelem.appendChild(table);
+})();
+</script>
+</body>
+</html>
