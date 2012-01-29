@@ -111,19 +111,30 @@
   /* Play a game. */
   function play (board, moves) {
     for (var i = 0; i < moves.length; i++) {
+      /* XXX: normalize move. */
       var move = moves[i].split(""),
           file = move.pop(),
           rank = move.pop(),
           piece = move.pop(),
-          square = document.getElementById("position-" + rank + file),
-          contents = square.firstChild;
+          dst = rank + file;
 
       /* XXX: Handle check. */
       if (piece == undefined) {
         piece = "p";
       }
 
-      square.replaceChild(
+      /* Choose piece for the player's color. */
+      if (i % 2) {
+        piece = piece.toUpperCase();
+      } else {
+        piece = piece.toLowerCase();
+      };
+
+      /* XXX: Find srcsquare. */
+
+      var dstsquare = document.getElementById("position-" + dst),
+          contents = dstsquare.firstChild;
+      dstsquare.replaceChild(
         document.createTextNode(pieces[piece]),
         contents);
     };
