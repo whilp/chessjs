@@ -114,7 +114,9 @@
         dfile = move.pop(),
         piece = move.pop(),
         dst = dfile + drank,
-        src, candidates = [];
+        src, x, y,
+        candidates = [],
+        matches = [];
 
     if (piece == undefined) {
       piece = "p";
@@ -126,23 +128,51 @@
       piece = piece.toLowerCase();
     };
 
+    for (var i = 0; i < files.length; i++) {
+      if (files[i] == dfile) {
+        x = i;
+      };
+    };
+    for (var i = 0; i < ranks.length; i++) {
+      if (ranks[i] == drank) {
+        y = i;
+      };
+    };
+
     if (piece == "p" || piece == "P") {
       for (var i = 0; i < ranks.length; i++) {
-        if (board[dfile + ranks[i]] == piece) {
-          candidates.push(dfile + ranks[i]);
-        };
+        candidates.push({x: x, y: i});
       };
-    }
+    } else if (piece == "n" || piece == "N") {
+      candidates = [
+        {x: x + 1, y: y - 2},
+        {x: x - 1, y: y - 2},
+        {x: x + 1, y: y + 2},
+        {x: x - 1, y: y - 2},
+      ];
+    };
+
+    for (var i = 0; i < candidates.length; i++) {
+      var candidate = candidates[i];
+
+      candidate.file = files[candidate.x];
+      candidate.rank = ranks[candidate.y];
+      candidate.pos = candidate.file + candidate.rank;
+
+      if (board[candidate.pos] == piece) {
+        matches.push(candidate);
+      };
+    };
 
     /* XXX: Handle edge cases. */
-    if (candidates.length < 1) {
+    if (matches.length < 1) {
       /* XXX: Failed to find a candidate for src. */
-    } else if (candidates.length > 1) {
+    } else if (matches.length > 1) {
       /* XXX: Too many candidates. */
     }
 
     return {
-      src: candidates[0],
+      src: matches[0].pos,
       dst: dst,
       piece: piece,
     }
@@ -153,12 +183,14 @@
     for (var i = 0; i < moves.length; i++) {
       var move = parse(board, moves[i], i);
 
+      /* Update board state. */
       board[move.src] = "";
       board[move.dst] = move.piece;
 
       /* XXX: Handle check. */
       /* XXX: Find srcsquare. */
 
+      /* Update board rendering. */
       var src = document.getElementById("position-" + move.src),
         contents = src.firstChild;
       src.replaceChild(
