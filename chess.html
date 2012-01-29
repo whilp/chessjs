@@ -108,14 +108,8 @@
     return table;
   };
 
-  function movediagonals(board, x, y, piece, maxdistance) {
-    var candidates = [],
-        directions = [
-          {x: 1, y: 1},
-          {x: 1, y: -1},
-          {x: -1, y: 1},
-          {x: -1, y: -1},
-        ];
+  function movedirections(board, x, y, directions, piece, maxdistance) {
+    var candidates = [];
     maxdistance = maxdistance || files.length;
 
     for (var distance = 1; distance < maxdistance; distance++) {
@@ -138,7 +132,30 @@
     return candidates;
   };
 
+  function movediagonals(board, x, y, piece, maxdistance) {
+    var directions = [
+          {x: 1, y: 1},
+          {x: 1, y: -1},
+          {x: -1, y: 1},
+          {x: -1, y: -1},
+        ];
+
+    return movedirections(board, x, y, directions, piece, maxdistance);
+  };
+
+  function moveranknfiles(board, x, y, piece, maxdistance) {
+    var directions = [
+          {x: 1, y: 0},
+          {x: -1, y: 0},
+          {x: 0, y: 1},
+          {x: 0, y: -1},
+        ];
+
+    return movedirections(board, x, y, directions, piece, maxdistance);
+  };
+
   function parse(board, move, n) {
+    console.log("parse", move);
     var move = move.split(""),
         drank = move.pop(),
         check = false;
@@ -202,6 +219,8 @@
         {x: x - 1, y: y + 2},
       ];
     } else if (piece == "b" || piece == "B") {
+      candidates = movediagonals(board, x, y, piece);
+    } else if (piece == "q" || piece == "Q") {
       candidates = movediagonals(board, x, y, piece);
     };
 
