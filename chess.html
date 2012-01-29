@@ -110,11 +110,11 @@
 
   function parse(board, move, n) {
     var move = move.split(""),
-        file = move.pop(),
-        rank = move.pop(),
-        dst = rank + file,
-        src = "whoknows",
-        piece = move.pop();
+        drank = move.pop(),
+        dfile = move.pop(),
+        piece = move.pop(),
+        dst = dfile + drank,
+        src, candidates = [];
 
     if (piece == undefined) {
       piece = "p";
@@ -126,8 +126,23 @@
       piece = piece.toLowerCase();
     };
 
+    if (piece == "p" || piece == "P") {
+      for (var i = 0; i < ranks.length; i++) {
+        if (board[dfile + ranks[i]] == piece) {
+          candidates.push(dfile + ranks[i]);
+        };
+      };
+    }
+
+    /* XXX: Handle edge cases. */
+    if (candidates.length < 1) {
+      /* XXX: Failed to find a candidate for src. */
+    } else if (candidates.length > 1) {
+      /* XXX: Too many candidates. */
+    }
+
     return {
-      src: src,
+      src: candidates[0],
       dst: dst,
       piece: piece,
     }
@@ -138,15 +153,21 @@
     for (var i = 0; i < moves.length; i++) {
       var move = parse(board, moves[i], i);
 
+      board[move.src] = "";
+      board[move.dst] = move.piece;
+
       /* XXX: Handle check. */
-
-      /* Choose piece for the player's color. */
-
       /* XXX: Find srcsquare. */
 
-      var dstsquare = document.getElementById("position-" + move.dst),
-          contents = dstsquare.firstChild;
-      dstsquare.replaceChild(
+      var src = document.getElementById("position-" + move.src),
+        contents = src.firstChild;
+      src.replaceChild(
+        document.createTextNode(" "),
+        contents);
+
+      var dst = document.getElementById("position-" + move.dst),
+          contents = dst.firstChild;
+      dst.replaceChild(
         document.createTextNode(pieces[move.piece]),
         contents);
     };
