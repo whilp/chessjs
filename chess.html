@@ -108,7 +108,7 @@
     return table;
   };
 
-  function movediagonals(board, x, y, piece) {
+  function movediagonals(board, x, y, piece, maxdistance) {
     var candidates = [],
         directions = [
           {x: 1, y: 1},
@@ -116,8 +116,9 @@
           {x: -1, y: 1},
           {x: -1, y: -1},
         ];
+    maxdistance = maxdistance || files.length;
 
-    for (var distance = 1; distance < files.length; distance++) {
+    for (var distance = 1; distance < maxdistance; distance++) {
       for (var i = 0; i < directions.length; i++) {
         var candidate = {
               x: x + (distance * directions[i].x),
