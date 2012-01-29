@@ -26,6 +26,10 @@
     font-size: 2.7em;
   }
 
+  .highlight {
+    background: red;
+  }
+
   </style>
 </head>
 <body>
@@ -89,6 +93,7 @@
             state = board[f + r];
 
         addclass(cell, "square");
+        cell.id = "position-" + f + r;
         if (state == undefined) {
           state = " ";
           addclass(cell, "empty");
@@ -109,6 +114,12 @@
   var boardelem = document.getElementById("board"),
       table = render(board);
   boardelem.appendChild(table);
+
+  for (var i = 0; i < moves.length; i++) {
+    var move = moves[i],
+      position = document.getElementById("position-" + move);
+    addclass(position, "highlight");
+  };
 })();
 </script>
 </body>
