@@ -1,6 +1,32 @@
 <html>
 <head>
   <title>jschess</title>
+  <style>
+  table,
+  table th,
+  table tr,
+  table td {
+    margin: 0,
+    padding: 0,
+  }
+
+  table td,
+  table th {
+    width: 1.3em;
+    height: 1.3em;
+    text-align: center;
+  }
+
+  .board {
+    background: #000;
+  }
+
+  .square {
+    background: #fff;
+    font-size: 2.7em;
+  }
+
+  </style>
 </head>
 <body>
 
@@ -21,6 +47,17 @@
         .split("=")[1]
         .split(delimiter);
 
+  /* Add a name to elem.className if it's not already present. */
+  function addclass(elem, cls) {
+    var names = elem.className.split(" ");
+    for (var i = 0; i < names.length; i++) {
+      if (names[i] == cls) {
+        return;
+      };
+    };
+    elem.className += " " + cls;
+  };
+
   /* Initialize board state. */
   function init(board) {
     var initialstate = {
@@ -40,22 +77,26 @@
   /* Render a board. */
   function render(board) {
     var table = document.createElement("table");
+    addclass(table, "board");
 
     for (var rank = 0; rank < ranks.length; rank++) {
       var row = document.createElement("tr"),
           r = ranks[rank];
+
       for (var file = 0; file < files.length; file++) {
         var f = files[file],
             cell = document.createElement("td"),
             state = board[f + r];
 
-        if (state) {
-          contents = document.createTextNode(state);
-          cell.appendChild(contents);
-        }
+        addclass(cell, "square");
+        if (state == undefined) {
+          state = " ";
+          addclass(cell, "empty");
+        };
+        contents = document.createTextNode(state);
+        cell.appendChild(contents);
 
         row.appendChild(cell);
-        console.log(f+r, board[f + r])
       };
       table.appendChild(row);
     };
