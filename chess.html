@@ -139,10 +139,16 @@
       };
     };
 
-    if (piece == "p" || piece == "P") {
-      for (var i = 0; i < ranks.length; i++) {
-        candidates.push({x: x, y: i});
-      };
+    if (piece == "p") {
+      candidates = [
+        {x: x, y: y - 1},
+        {x: x, y: y - 2},
+      ];
+    } else if (piece == "P") {
+      candidates = [
+        {x: x, y: y + 1},
+        {x: x, y: y + 2},
+      ];
     } else if (piece == "n" || piece == "N") {
       candidates = [
         {x: x + 1, y: y - 2},
